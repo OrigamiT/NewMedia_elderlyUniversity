@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>秦淮老年大学</title>
+	<style type="text/css">
+		body {
+			padding: 0;
+			margin: 0;
+			background-color: transparent;
+		}
+		.bg {
+            position: relative;
+			width: 1280px;
+			height: 720px;
+			background: url(../res/images/bg.png) no-repeat;
+			overflow: hidden;
+		}
+
+        #item0,#item1{
+            position: absolute;
+            width: 236px;
+            height: 302px;
+            border-radius: 11px;
+        }
+        #item2,#item3{
+            position: absolute;
+            width: 236px;
+	        height: 141px;
+	        border-radius: 11px;
+        }
+        #item4{
+            position: absolute;
+            width: 365px;
+	        height: 302px;
+            border-radius: 11px;
+        }
+        #item5,#item6,#item7{
+            position: absolute;
+            width: 365px;
+	        height: 138px;
+            left: 73px;
+            border-radius: 11px;
+        }
+        /*三种高度 */
+        #item5,#item6,#item7{
+            top: 483px;
+        }
+        #item0,#item1,#item2,#item4{
+            top: 152px;
+        }
+        #item3{
+            top: 313px;
+        }
+
+        /*left设计*/
+        #item0{
+            left: 74px;
+        }
+        #item1{
+            left: 330px;
+        }
+        #item2,#item3{
+            left: 586px;
+        }
+        #item4,#item7{
+            left: 842px;
+        }
+        #item5{
+            left: 73px;
+        }
+        #item6{
+            left: 458px;
+        }
+
+		.item_focus{
+			position: absolute;
+			top: 134px;
+			left: 55px;
+            width: 274px;
+	        height: 338px;
+			background: url(../res/images/focus0.png) no-repeat;
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+</head>
+
+<body onload="load()">
+	<div class="bg">
+		<div class="item_focus"></div>
+			<div id="item0"></div>
+			<div id="item1"></div>
+			<div id="item2"></div>
+			<div id="item3"></div>
+			<div id="item4"></div>
+			<div id="item5"></div>
+			<div id="item6"></div>
+			<div id="item7"></div> 
+	</div>
+</body>
+
+<script type="text/javascript" src="../res/js/action.js"></script>
+<script type="text/javascript" src="../res/js/jquery.min.js"></script>
+<script type="text/javascript" src="../res/js/util.js"></script>
+<script type="text/javascript" src="../res/js/config.js"></script>
+
+<script type="text/javascript">
+    //自制数组内容页
+    var contentList =[{
+                poster: "../res/images/jpk.png",
+				url:"./excellentPage.html",	
+                title: '精品课',
+            }, {
+                poster: "../res/images/gkk.png",
+                url:"",	
+                title: '公开课'
+            }, {
+                poster: "../res/images/zbk.png",
+                url:"",	
+                title: '直播课'
+            },{
+                poster: "../res/images/lbk.png",
+                url:"",	
+                title: '录播课'
+            },{
+                poster: "../res/images/fczs.png",
+                url:"",	
+                title: '风采展示'
+            },{
+                poster: "../res/images/xxgk.png",
+                url:"",	
+                title: '学校概况'
+            },{
+                poster: "../res/images/bmrk.png",
+                url:"",	
+                title: '报名入口'
+            },{
+                poster: "../res/images/qwhd.png",
+                url:"",	
+                title: '趣味活动'
+            }
+    ]
+
+	//focus选中框对应位置
+	var focusPosition = [{
+		"position": "absolute",
+		top: "134px",
+		left: "55px",
+        width: "274px",
+        height: "338px",
+		"background": "url(../res/images/focus0.png) no-repeat"
+	},{
+		"position": "absolute",
+		top: "134px",
+		left: "311px",
+        width: "274px",
+        height: "338px",
+		"background": "url(../res/images/focus0.png) no-repeat"
+	},{
+		"position": "absolute",
+		top: "134px",
+		left: "567px",
+        width: "274px",
+        height: "177px",
+		"background": "url(../res/images/focus1.png) no-repeat"
+	},{
+		"position": "absolute",
+		top: "295px",
+		left: "567px",
+        width: "274px",
+        height: "177px",
+		"background": "url(../res/images/focus1.png) no-repeat"
+	},{
+		"position": "absolute",
+		top: "134px",
+		left: "824px",
+        width: "401px",
+        height: "338px",
+		"background": "url(../res/images/focus2.png) no-repeat"
+	},{
+		"position": "absolute",
+		top: "465px",
+		left: "55px",
+        width: "401px",
+        height: "174px",
+		"background": "url(../res/images/focus3.png) no-repeat"
+	},{
+		"position": "absolute",
+		top: "465px",
+		left: "440px",
+        width: "401px",
+        height: "174px",
+		"background": "url(../res/images/focus3.png) no-repeat"
+	},{
+		"position": "absolute",
+		top: "465px",
+		left: "824px",
+        width: "401px",
+        height: "174px",
+		"background": "url(../res/images/focus3.png) no-repeat"
+	}]
+
+	try {
+		stbNo = getStbNo();
+		if (!stbNo) {
+			stbNo = 'test'
+		}
+	} catch (e) {
+		stbNo = 'test'
+	}
+
+	function load() {
+        var index = 0;
+		center.index = index;
+        console.log("onLoadIndex="+center.index)
+        var poster;
+        for (var i = 0; i < contentList.length; i++) {
+                poster = contentList[i].poster;
+				if (poster != '' && poster != null) {
+					var str = "<img src='" + poster + "'/>"
+					$("#item" + i).html(str);
+				}
+			}
+			center.eff();
+		    pageEve();
+	}
+
+	var center = {
+		index: 0,
+		up: function () {
+			if (this.index == 3) {
+				this.index --;
+			} else if (this.index == 5) {
+				this.index = 0;
+			} else if (this.index == 6) {
+				this.index = 3;
+			} else if (this.index == 7) {
+				this.index = 4;
+			}
+			this.eff();
+		},
+		down: function () {
+			if (this.index < 2) {
+				this.index = 5;
+			} else if (this.index == 2) {
+				this.index ++;
+			} else if (this.index == 3) {
+				this.index = 6;
+			} else if (this.index == 4) {
+				this.index = 7;
+			}
+			this.eff();
+		},
+		left: function () {
+			if (this.index > 0) {
+				if (this.index < 3 || this.index > 5) {
+					this.index --;
+				} else if (this.index == 3) {
+					this.index = 1;
+				} else if (this.index == 4) {
+					this.index = 2;
+				}
+			}
+			this.eff();
+		},
+		right: function () {
+			if(this.index < 7){
+				if (this.index > 1 && this.index < 4) {
+					this.index = 4;
+				}else if(this.index < 2 || this.index > 4){
+					this.index++;
+				}
+			}
+			this.eff();
+		},
+		eff: function () {
+			console.log(this.index)
+			$('.item_focus').hide();
+			$('.item_focus').css(focusPosition[this.index]).show();
+		}
+	}
+
+	//键值操作	
+	function pageEve() {
+		keyAction.add(function () {
+			center.up();
+		}, KEY.UP)
+		keyAction.add(function () {
+			center.down();
+		}, KEY.DOWN)
+		keyAction.add(function () {
+			center.left();
+		}, KEY.LEFT)
+		keyAction.add(function () {
+			center.right();
+		}, KEY.RIGHT)
+		keyAction.add(function () {
+			var i = center.index;
+			// index为跳转后对应的title和categoryid的对应数据下标
+			utils.setCookie('index', center.index)
+			window.location.href = contentList[i].url;
+		}, KEY.ENTER)
+
+		keyAction.add(function () {
+			event.preventDefault();
+			window.history.go(-1);
+		}, [KEY.BACK, 32, KEY.EXIT])
+	}
+</script>
+
+</html>

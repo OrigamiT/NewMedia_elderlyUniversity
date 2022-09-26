@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>精品课程</title>
+	<style type="text/css">
+		body {
+			padding: 0;
+			margin: 0;
+			background-color: transparent;
+		}
+		.bg {
+            position: relative;
+			width: 1280px;
+			height: 720px;
+			background: url(../res/images_sed/bg2.png) no-repeat;
+			overflow: hidden;
+		}
+
+		.center{
+			position: absolute;
+			top: 153px;
+			left: 268px;
+			width: 939px;
+			height: 473px;
+			overflow: hidden;
+			background: url(../res/images_sed/center.png) no-repeat;
+		}
+		#list0,#list1,#list2,#list3,#list4,#list5,
+		.chooselist0,.chooselist1,.chooselist2,.chooselist3,.chooselist4,.chooselist5{
+			position: absolute;
+			left: 74px;
+			width: 195px;
+			height: 73px;
+		}
+		.chooselist0{
+			top: 153px;
+			background: url(../res/images_sed/list0_selected.png) no-repeat;
+			display: none;
+		}
+		.chooselist1{
+			top: 230px;
+			background: url(../res/images_sed/list1_selected.png) no-repeat;
+			display: none;
+		}
+		.chooselist2{
+			top: 308px;
+			background: url(../res/images_sed/list2_selected.png) no-repeat;
+			display: none;
+		}
+		.chooselist3{
+			top: 385px;
+			background: url(../res/images_sed/list3_selected.png) no-repeat;
+			display: none;
+		}
+		.chooselist4{
+			top: 463px;
+			background: url(../res/images_sed/list4_selected.png) no-repeat;
+			display: none;
+		}
+		.chooselist5{
+			top: 540px;
+			background: url(../res/images_sed/list5_selected.png) no-repeat;
+			display: none;
+		}
+
+		#list0{
+			top: 153px;
+			background: url(../res/images_sed/list0.png) no-repeat;
+		}
+		#list1{
+			top: 230px;
+			background: url(../res/images_sed/list1.png) no-repeat;
+		}
+		#list2{
+			top: 308px;
+			background: url(../res/images_sed/list2.png) no-repeat;
+		}
+		#list3{
+			top: 385px;
+			background: url(../res/images_sed/list3.png) no-repeat;
+		}
+		#list4{
+			top: 463px;
+			background: url(../res/images_sed/list4.png) no-repeat;
+		}
+		#list5{
+			top: 540px;
+			background: url(../res/images_sed/list5.png) no-repeat;
+		}
+
+		.item {
+			float: left;
+			width: 296px;
+			height: 166px;
+			margin-left: 14px;
+			margin-top: 29px;
+		}
+
+		.item_focus {
+			position: absolute;
+			width: 303px;
+			height: 173px;
+			margin-left: -3px;
+			margin-top: -4px;
+			z-index: 999;
+			background: url(../res/images_sed/focus.png) no-repeat;
+			display: none;
+		}
+
+		.scroll {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 989px;
+			height: 473px;
+		}
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+</head>
+
+<body onload="load()">
+	<div class="bg">
+		<div class="center">
+			<div class="scroll">
+			    <!-- <div class="item"></div> -->
+		    </div>
+	    </div>
+		<!-- <div class="item_focus"></div> -->
+			<div id="list0"></div>
+			<div id="list1"></div>	
+			<div id="list2"></div>
+			<div id="list3"></div>
+			<div id="list4"></div>
+			<div id="list5"></div>
+			<div class="chooselist0"></div>
+			<div class="chooselist1"></div>
+			<div class="chooselist2"></div>
+			<div class="chooselist3"></div>
+			<div class="chooselist4"></div>
+			<div class="chooselist5"></div>
+	</div>
+</body>
+
+<script type="text/javascript" src="../res/js/action.js"></script>
+<script type="text/javascript" src="../res/js/jquery.min.js"></script>
+<script type="text/javascript" src="../res/js/util.js"></script>
+<script type="text/javascript" src="../res/js/config.js"></script>
+<script type="text/javascript" src="../res/js/excellentContent.js"></script>
+
+<script type="text/javascript">
+	var reCookie = utils.getCookie("record").split(",");
+    var focus = reCookie.length > 1 ? reCookie[0] : "list";//焦点
+	var listIndex = reCookie.length > 1 ? Number(reCookie[1]) : 0; //列表序列
+	var itemIndex = reCookie.length > 1 ? Number(reCookie[2]) : 0; //中间元素序列
+	var num = reCookie.length > 1 ? Number(reCookie[3]): 0;  //当前滚动高度的乘基数
+	var line = reCookie.length > 1 ? Number(reCookie[4]) : 1; //当前选中行数
+	//console.log("focus=" + focus)
+	//console.log("listIndex=" + listIndex)
+	//console.log("itemIndex=" + itemIndex)
+	//console.log("line=" + line)
+	//console.log("num=" + num)
+	try {
+		stbNo = getStbNo();
+		if (!stbNo) {
+			stbNo = 'test'
+		}
+	} catch (e) {
+		stbNo = 'test'
+	}
+	var data;
+	function load() {
+		load2()
+		var topp = -(num * 195);
+		if(focus=="list"){
+			$(".item_focus").hide()
+		}else{
+			center.eff()
+			$('.scroll').css('top', topp);
+		}
+		list.chooseInit()
+		pageEve();
+	}
+
+	function load2() {
+		data = categoryList["content"+listIndex];
+		center.data = data;
+		var src ; //图片资源路径
+		var str = ''; //展示遍历出来的数组在html上
+		for(var i = 0; i < data.length; i++){
+			src = data[i].poster;
+			var img = "<img src=' " + src + "'/>";
+			str += "<div class='item'><div class='item_focus'></div>" + img + "</div>";
+		}
+		$(".scroll").html(str);
+	}
+
+	var list = {
+	    index: listIndex,
+		up: function () {
+			if(this.index > 0){
+				$('.chooselist'+ this.index).hide()
+				$('#list'+ this.index).show()
+				this.index--
+				listIndex = this.index
+				this.chooseInit()
+				this.centerInit()
+			}
+		},
+		down: function () {
+			if(this.index < 5){
+				$('.chooselist'+ this.index).hide()
+			    $('#list'+ this.index).show()
+				this.index++
+				listIndex = this.index
+				this.chooseInit()
+				this.centerInit()
+			}
+		},
+		left: function () {
+		},
+		right: function () {
+			focus = 'center'
+			itemIndex = center.index
+			center.eff()
+		},
+		chooseInit: function() {
+			$('.chooselist'+ this.index).show()
+			$('#list'+ this.index).hide()
+		},
+		centerInit: function () {
+			//重置高度
+			center.num = 0
+			center.index = 0
+			center.line = 1
+			$('.scroll').css('top', center.num);
+			load2()
+		}
+	}
+
+	var center = {
+		index: itemIndex,
+		line: line, // 为当前行数
+		num: num, // 滚动高度的乘基数
+		topp:"0px",
+		data: [],
+		up: function () {
+			if (this.index >= 3) {
+				this.index = this.index - 3;
+				if (this.line > 1 ) {
+					this.line --;
+				} else {
+					this.num--;
+					var t = -(this.num * 195);
+					$('.scroll').css('top', t);
+				}
+				this.eff();
+			}
+		},
+		down: function () {
+			var len = $(".scroll").children().length; // 数据的总个数
+			var situation1 = Number(this.index) + 3 < len;
+			var situation2 = Number(this.index % 3) == 1 && this.index == len - 3;
+			var situation3 = Number(this.index % 3) == 2 && (this.index == len - 3 || this.index == len - 2);
+			console.log(situation1+','+(situation2 || situation3))
+			if (situation1) {
+				this.index = this.index + 3;
+				if (this.line == 1) {
+					this.line = 2;
+				} else {
+					this.num++;
+					var t = -(this.num * 195);
+					$('.scroll').css('top', t);
+				}
+				this.eff();
+			}
+			//从第二第三个位置下到下一行第一个或第二个 内容量为4或者5的倍数时
+			else if (situation2 || situation3) {
+				this.index = len - 1;
+				if (this.line == 1) {
+					this.line = 2;
+				}
+				else {
+					this.num++;
+					var t = -(this.num * 195);
+					$('.scroll').css('top', t);
+				}
+				this.eff()
+			}
+		},
+		left: function () {
+			if(Number(this.index % 3) == 0){
+				focus = 'list'
+				list.index = listIndex
+				$(".item_focus").hide()
+			}else {
+				this.index--
+				this.eff();
+			}
+		},
+		right: function () {
+			var len = $(".scroll").children().length; 
+			if ((Number(this.index % 3) < 2) && this.index < len-1) {
+				this.index++;
+				this.eff();
+			}
+		},
+		eff: function () {
+			console.log("focus=" + focus + "第"+this.line+"行, 序列为："+ center.index + ", 滚动高度的乘基数为"+ this.num)
+			$(".scroll .item").eq(this.index).find(".item_focus").show();
+			$(".scroll .item").eq(this.index).siblings().find(".item_focus").hide();
+		},
+		enter :function(){
+			utils.setCookie(
+                "record",
+                focus + "," + list.index + "," + center.index + "," 
+				+ center.num + "," + center.line 
+            ); 
+			var url = data[center.index].url; // 单集播放链接
+			var IsIpAccount;
+			var ISIP;
+			try {
+				IsIpAccount = iPanel.ioctlRead("persist.sys.is.ipAccount");
+				ISIP = iPanel.ioctlRead("persist.sys.netWorkTypeInfo");
+			} catch (e) {}
+			// 判断IP盒子后跳转
+			if (IsIpAccount == 'YES' || ISIP == '2') {
+				url = url + '&version=ip';
+			}
+			window.location.href = url;
+		}
+	}
+	//键值操作	
+	function pageEve() {
+		keyAction.add(function () {
+			if(focus == 'list'){
+				list.up()
+			}else{center.up()}
+		}, KEY.UP)
+		keyAction.add(function () {
+			if(focus == 'list'){
+				list.down()
+			}else{center.down()}
+		}, KEY.DOWN)
+		keyAction.add(function () {
+			if(focus == 'list'){
+				list.left()
+			}else{center.left()}
+		}, KEY.LEFT)
+		keyAction.add(function () {
+			if(focus == 'list'){
+				list.right()
+			}else{center.right()}
+		}, KEY.RIGHT)
+		keyAction.add(function () {
+			if(focus == "center"){
+				center.enter()
+			}
+		}, KEY.ENTER)
+
+		keyAction.add(function () {
+			utils.delCookie("record");
+			event.preventDefault();
+			window.history.go(-1);
+		}, [KEY.BACK, 32, KEY.EXIT])
+
+	}
+</script>
+
+</html>
